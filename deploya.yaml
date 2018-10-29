@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: deploya-system
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: deploya-sa-cluster-admin-binding
+subjects:
+- kind: User
+  name: system:serviceaccount:deploya-system:default
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploya
+  namespace: deploya-system
+spec:
+  selector:
+    matchLabels:
+      app: deploya
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: deploya
+    spec:
+      containers:
+      - name: deploya
+        image: berkgokden/deploya:0.1.13
+        env:
+        - name: SERVEO_SUBDOMAIN
+          value: "berk-webhook"
+        - name: GITHUB_REPO_OWNER
+          value: "bgokden"
+        - name: GITHUB_REPO_NAME
+          value: "flask-hello-world"
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-token-secret
+              key: token
+        - name: DOCKER_REPO
+          value: "berkgokden/flaskhelloworld"
+        - name: PULL_SECRET_NAMESPACE
+          value: "continuous-deployment"
+      imagePullSecrets:
+      - name: reposecret
