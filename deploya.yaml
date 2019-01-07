@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: deploya
-        image: berkgokden/deploya:0.1.13
+        image: berkgokden/deploya:0.1.14
         env:
         - name: SERVEO_SUBDOMAIN
           value: "berk-webhook"
