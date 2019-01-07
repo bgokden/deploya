@@ -77,7 +77,10 @@ class PayloadView(object):
                         logging.info(file_content)
                         folders_path = os.path.dirname(file_content.path)
                         if folders_path:
-                            os.makedirs(dirpath+"/"+folders_path)
+                            try:
+                                os.makedirs(dirpath+"/"+folders_path)
+                            except OSError:
+                                pass
                         with open(dirpath+"/"+file_content.path, 'wb') as output:
                             output.write(file_content.decoded_content)
                 # run kaniko
