@@ -82,10 +82,13 @@ class PayloadView(object):
                             output.write(file_content.decoded_content)
                 # run kaniko
                 docker_image = DOCKER_REPO+":"+self.payload['before']
-                call(["/kaniko/executor", "-c", dirpath, "-d", docker_image])
-                # run kubectl
                 kubectl_files_folder=dirpath+"/kubernetes"
-                call(["sed","-i", "s,IMAGE,"+docker_image+",g", kubectl_files_folder+"/deploy.yaml"])
+                # only run kaniko when dockerfile exists
+                exists = os.path.isfile(dirpath+"/Dockerfile")
+                if exists:
+                    call(["/kaniko/executor", "-c", dirpath, "-d", docker_image])
+                    call(["sed","-i", "s,IMAGE,"+docker_image+",g", kubectl_files_folder+"/deploy.yaml"])
+                # run kubectl
                 call(["kubectl","apply","-f", kubectl_files_folder])
                 # clean
                 shutil.rmtree(dirpath)

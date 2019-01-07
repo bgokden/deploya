@@ -16,14 +16,18 @@ Generate a github personal access token: https://help.github.com/articles/creati
 Configure environment variable in deploya.yaml
 
 And then run the commands below:
-
+```
 kubectl create namespace continuous-deployment
-kubectl create secret docker-registry reposecret --docker-server=https://index.docker.io/v1/ --docker-username=<username> --docker-password=<password> --docker-email=<email> -n continuous-deployment
+
+kubectl create secret docker-registry reposecret --docker-server=https://index.docker.io/v1/ --docker-username=< username > --docker-password=< password > --docker-email=< email > -n continuous-deployment
+
 kubectl create namespace deploya-system
-kubectl create secret generic github-token-secret --from-literal=token=<github-token> -n deploya-system
 
+kubectl create secret generic github-token-secret --from-literal=token=< github-token > -n deploya-system
+```
+```
 kubectl apply -f deploya.yaml
-
+```
 See the github repo: https://github.com/bgokden/flask-hello-world/
 It has a folder called kubernetes with a file called deploy.yaml
 And it has a Dockerfile
