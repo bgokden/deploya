@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=0.1.16
+VERSION=0.1.17
 
 IMAGE=berkgokden/deploya:$VERSION
 
