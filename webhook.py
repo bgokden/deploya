@@ -71,18 +71,22 @@ class PayloadView(object):
                 contents = repo.get_contents("", ref=self.payload['ref'])
                 while len(contents) > 0:
                     file_content = contents.pop(0)
-                    if file_content.type == "dir":
-                        contents.extend(repo.get_contents(file_content.path))
-                    else:
-                        logging.info(file_content)
-                        folders_path = os.path.dirname(file_content.path)
-                        if folders_path:
-                            try:
-                                os.makedirs(dirpath+"/"+folders_path)
-                            except OSError:
-                                pass
-                        with open(dirpath+"/"+file_content.path, 'wb') as output:
-                            output.write(file_content.decoded_content)
+                    # print(file_content.path)
+                    try:
+                        if file_content.type == "dir":
+                            contents.extend(repo.get_contents(file_content.path))
+                        else:
+                            logging.info(file_content)
+                            folders_path = os.path.dirname(file_content.path)
+                            if folders_path:
+                                try:
+                                    os.makedirs(dirpath+"/"+folders_path)
+                                except OSError:
+                                    pass
+                            with open(dirpath+"/"+file_content.path, 'wb') as output:
+                                output.write(file_content.decoded_content)
+                    except Exception as e:
+                        print(e) # this added due to a large file exception in get_contents
                 # run kaniko
                 docker_image = DOCKER_REPO+":"+self.payload['before']
                 kubectl_files_folder=dirpath+"/kubernetes"
