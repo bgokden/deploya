@@ -1,4 +1,4 @@
-FROM gcr.io/kaniko-project/executor:latest
+FROM gcr.io/kaniko-project/executor:v0.7.0
 FROM python:3.6-alpine3.8
 
 COPY --from=0 /kaniko /kaniko
